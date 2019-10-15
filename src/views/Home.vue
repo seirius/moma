@@ -1,8 +1,9 @@
 <template>
 <div>
+    <div class="me" ref="me"></div>
     <div class="grid" v-for="(x, xIndex) in squares" :key="xIndex">
-        <div v-for="(y, yIndex) in x" :key="yIndex" @click="positionHere(xIndex, yIndex)">
-            <span>{{}}</span>
+        <div v-for="(y, yIndex) in x" :key="yIndex" @click="positionHere(xIndex, yIndex)" ref="center">
+            <div class="center" :ref="'cen-' + xIndex + '-' + yIndex"></div>
         </div>
     </div>
 </div>
@@ -23,8 +24,6 @@ import { Entity } from "../game/Entity";
         }
     },
     methods: {
-        positionHere: function (x: number, y: number) {
-        },
         getEntityByPosition: function (x: number, y: number): void {
             return this.$data.entites.find((entity: Entity) => entity.position.x === x && entity.position.y === y);
         },
@@ -37,10 +36,26 @@ import { Entity } from "../game/Entity";
         }
     },
     mounted: function ()  {
-        this.entities.push(new VikingFeodor());
+        this.$data.entities.push(new VikingFeodor());
     }
 })
-export default class Home extends Vue {}
+export default class Home extends Vue {
+    public getCenterPosition(x: number, y: number): Vector {
+        const center: HTMLElement = (<HTMLElement[]>this.$refs[`cen-${x}-${y}`])[0];
+        const rect = center.getBoundingClientRect();
+        return new Vector(center.offsetLeft, center.offsetTop);
+    }
+    public positionHere(x: number, y: number): void {
+        const position = this.getCenterPosition(x, y);
+
+        const me = this.getMe();
+        me.style.left = position.x - 7.5 + "px";
+        me.style.top = position.y - 7.5 + "px";
+    }
+    public getMe(): HTMLElement {
+        return (<HTMLElement>this.$refs.me);
+    }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -56,7 +71,12 @@ export default class Home extends Vue {}
         display: flex;
         width: 100%;
         height: 100%;
-        color: red;
+        color: white;
+        .center {
+            display: hidden;
+            width: 0px;
+            height: 0px;
+        }
     }
 }
 
@@ -78,5 +98,13 @@ export default class Home extends Vue {}
 .grid > * {
     background: rgba(0, 0, 0, 0.1);
     border: 1px white solid;
+}
+
+.me {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background-color: dodgerblue;
+    border: 1px solid red;
 }
 </style>
