@@ -6,7 +6,6 @@ export class VikingFeodor extends Entity {
     }
 
     public update(): void {
-        console.log(this);
         this.position.x++;
     }
 }

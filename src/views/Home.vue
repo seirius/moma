@@ -17,29 +17,19 @@ import { Entity } from "../game/Entity";
 
 @Component({
     components: {},
-    data: () => {
+    methods: {
+        getEntityByPosition: function (x: number, y: number): void {
+            return this.$data.entities.find((entity: Entity) => entity.position.x === x && entity.position.y === y);
+        },
+    },
+})
+export default class Home extends Vue {
+    public data(): any {
         return {
             entities: [],
             squares: Array.from(Array(15)).map((x) => x = Array.from(Array(15)))
         }
-    },
-    methods: {
-        getEntityByPosition: function (x: number, y: number): void {
-            return this.$data.entites.find((entity: Entity) => entity.position.x === x && entity.position.y === y);
-        },
-        run: function () {
-            setTimeout(() => {
-                this.$data.entities.forEach((entity: Entity) => {
-                    entity.update();
-                });
-            }, 50);
-        }
-    },
-    mounted: function ()  {
-        this.$data.entities.push(new VikingFeodor());
     }
-})
-export default class Home extends Vue {
     public getCenterPosition(x: number, y: number): Vector {
         const center: HTMLElement = (<HTMLElement[]>this.$refs[`cen-${x}-${y}`])[0];
         const rect = center.getBoundingClientRect();
@@ -54,6 +44,16 @@ export default class Home extends Vue {
     }
     public getMe(): HTMLElement {
         return (<HTMLElement>this.$refs.me);
+    }
+    public run(): void {
+        setTimeout(() => {
+            this.$data.entities.forEach((entity: Entity) => entity.update());
+            this.run();
+        }, 50);
+    }
+    public mounted() {
+        this.$data.entities.push(new VikingFeodor());
+        this.run();
     }
 }
 </script>
