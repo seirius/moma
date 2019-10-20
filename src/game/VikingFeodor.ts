@@ -1,11 +1,25 @@
 import { Entity } from './Entity';
+import { Sprite, EntityRenderer } from './Sprite';
+import { Action } from './action/Action';
+ 
+export class VikingFeodor extends Entity implements EntityRenderer {
+    public sprite: Sprite;
 
-export class VikingFeodor extends Entity {
-    constructor() {
+    constructor(sprite: Sprite) {
         super();
+        this.sprite = sprite;
     }
 
     public update(): void {
-        this.position.x++;
+        super.update();
+
+    }
+
+    public render(): void {
+        
+    }
+
+    public getAction(): Action {
+        return new Action(() => {});
     }
 }
