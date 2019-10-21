@@ -1,6 +1,6 @@
-import { Vector } from '../Vector';
-import { Entity } from '../Entity';
 import { Engine } from '../Engine';
+import { Entity } from '../Entity';
+import { Vector } from '../Vector';
 
 export class Action {
     public engine!: Engine;
@@ -33,9 +33,9 @@ export class MoveAction extends Action {
         super(() => {
             if (this.targetMove) {
                 const next = MoveAction.getNextSquare(this.originEntity.position, this.targetMove);
-                if (!this.engine.getEntityByPostion(next)) {
-                    this.originEntity.position.x = next.x;
-                    this.originEntity.position.y = next.y;
+                const nextCell = this.engine.getCell(next.x, next.y);
+                if (nextCell && nextCell.canWalkThrough()) {
+                    this.engine.placeEntity(this.originEntity, next);
                 }
             }
         });

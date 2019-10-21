@@ -10,7 +10,7 @@ export class Engine {
     public squares: any[] = Array.from(Array(15))
     .map(x => (x = Array.from(Array(15))));
     public cells: Cell[][] = Array.from(Array(15))
-    .map(y => (y = Array.from(Array(15)).map(x => new Cell(this, new Vector(x, y)))));
+    .map((y, yIndex) => (y = Array.from(Array(15)).map((x, xIndex) => new Cell(this, new Vector(xIndex, yIndex)))));
     public squareElements: IOnlyElements;
 
     private actionStartTimer?: number = 0;
@@ -86,8 +86,16 @@ export class Engine {
     }
 
     public findCloseEntity(position: Vector, range: number): Entity[] {
-        // TODO: find entity by range
-        return [];
+        const entities: Entity[] = [];
+        for (let y = position.y - range; y < position.y + range; y++) {
+            for (let x = position.x - range; x < position.x + range; x++) {
+                const cell = this.getCell(x, y);
+                if (cell && cell.entities.length) {
+                    entities.push(...cell.entities);
+                }
+            }
+        }
+        return entities;
     }
 }
 

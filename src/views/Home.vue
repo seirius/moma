@@ -7,6 +7,7 @@
 				<div class="center" :class="'cen-' + yIndex + '-' + xIndex" :ref="'cen-' + yIndex + '-' + xIndex"></div>
 			</div>
 		</div>
+        <button type="button" @click="search()">search</button>
 	</div>
 </template>
 
@@ -18,6 +19,7 @@ import { Vector } from "../game/Vector";
 import { Entity } from "../game/Entity";
 import UnitRenderer from "../components/UnitRenderer.vue";
 import { Engine, IOnlyElements } from "./../game/Engine";
+import { MoveAction } from '../game/action/Action';
 
 @Component({
 	components: {
@@ -27,7 +29,12 @@ import { Engine, IOnlyElements } from "./../game/Engine";
 export default class Home extends Vue {
 	public engine!: Engine;
 	
-	public sjokz = new SjokzValkyr();
+    public sjokz = new SjokzValkyr();
+    public feodor = new VikingFeodor({
+        color: 'dodgerblue',
+        width: 15,
+        height: 15,
+    });
 
     public constructor() {
         super();
@@ -36,23 +43,22 @@ export default class Home extends Vue {
         });
         this.engine.placeEntity(this.sjokz, new Vector(5, 5));
 		this.engine.addEntity(this.sjokz);
-		const feodor = new VikingFeodor({
-			color: "dodgerblue",
-			width: 15,
-			height: 15
-        });
-        this.engine.placeEntity(feodor, new Vector(3, 4));
-        this.engine.addEntity(feodor);
+        this.engine.placeEntity(this.feodor, new Vector(3, 4));
+        this.engine.addEntity(this.feodor);
         this.engine.run();
     }
 
 	public positionHere(x: number, y: number): void {
-		this.sjokz.targetMove = new Vector(x, y);
+        this.sjokz.pushAction(new MoveAction(this.sjokz, new Vector(x, y)));
 	}
 
 	public getMe(): HTMLElement {
 		return <HTMLElement>this.$refs.me;
-	}
+    }
+    
+    public search(): void {
+        this.feodor.search();
+    }
 
 }
 </script>

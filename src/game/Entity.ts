@@ -26,7 +26,7 @@ export abstract class Entity {
     public onWorldAdd(): void {}
 
     public pushAction(action: Action): void {
-        
+        this.engine.pushAction(action);
     }
 }
 

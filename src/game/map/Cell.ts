@@ -21,12 +21,12 @@ export class Cell {
 
     public leave(entity: Entity): void {
         const index = this.entities.indexOf(entity);
-        if (index) {
+        if (index > -1) {
             this.entities.splice(index, 1);
         }
     }
 
     public canWalkThrough(): boolean {
-        return !!this.entities.length;
+        return !this.entities.length;
     }
 }
