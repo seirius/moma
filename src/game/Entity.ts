@@ -1,7 +1,7 @@
-import { Vector } from './Vector';
 import { v4 } from 'uuid';
-import { Engine } from './Engine';
 import { Action } from './action/Action';
+import { Engine } from './Engine';
+import { Vector } from './Vector';
 
 export abstract class Entity {
     public readonly id = v4();
@@ -9,6 +9,7 @@ export abstract class Entity {
     public position: Vector;
     public worldPosition: Vector = new Vector();
     public engine!: Engine;
+    public sides: EntitySide[] = [EntitySide.ALLY];
 
     constructor(position = new Vector()) {
         this.name = 'Mario';
@@ -24,5 +25,12 @@ export abstract class Entity {
 
     public onWorldAdd(): void {}
 
-    public abstract getAction(): Action;
+    public pushAction(action: Action): void {
+        
+    }
+}
+
+export enum EntitySide {
+    ALLY = 1,
+    ENEMY = 2
 }

@@ -1,6 +1,6 @@
-import { EntityRenderer, Sprite } from './Sprite';
+import { MoveAction } from './action/Action';
 import { Entity } from './Entity';
-import { Action, MoveAction, EmptyAction } from './action/Action';
+import { EntityRenderer, Sprite } from './Sprite';
 import { Vector } from './Vector';
 
 export class SjokzValkyr extends Entity implements EntityRenderer {
@@ -19,12 +19,8 @@ export class SjokzValkyr extends Entity implements EntityRenderer {
 
     public render(): void {}
 
-    public getAction(): Action {
-        if (this.targetMove) {
-            return new MoveAction(this, this.targetMove);
-        } else {
-            return new EmptyAction();
-        }
+    public moveTowards(target: Vector): void {
+        this.pushAction(new MoveAction(this, target));
     }
 
 }

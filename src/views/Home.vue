@@ -33,14 +33,15 @@ export default class Home extends Vue {
         super();
         this.engine = new Engine({
             squareElements: <IOnlyElements>this.$refs
-		});
+        });
+        this.engine.placeEntity(this.sjokz, new Vector(5, 5));
 		this.engine.addEntity(this.sjokz);
 		const feodor = new VikingFeodor({
 			color: "dodgerblue",
 			width: 15,
 			height: 15
-		});
-		feodor.position = new Vector(3, 4);
+        });
+        this.engine.placeEntity(feodor, new Vector(3, 4));
         this.engine.addEntity(feodor);
         this.engine.run();
     }

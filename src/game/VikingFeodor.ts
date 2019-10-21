@@ -1,6 +1,5 @@
 import { Entity } from './Entity';
-import { Sprite, EntityRenderer } from './Sprite';
-import { Action } from './action/Action';
+import { EntityRenderer, Sprite } from './Sprite';
  
 export class VikingFeodor extends Entity implements EntityRenderer {
     public sprite: Sprite;
@@ -19,7 +18,4 @@ export class VikingFeodor extends Entity implements EntityRenderer {
         
     }
 
-    public getAction(): Action {
-        return new Action(() => {});
-    }
 }
