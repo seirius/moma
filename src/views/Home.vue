@@ -1,9 +1,8 @@
 <template>
 	<div>
-		<div class="me" ref="me"></div>
 		<UnitRenderer v-for="entity in engine.entities" :key="entity.id" :entity="entity" />
 		<div class="grid" v-for="(y, yIndex) in engine.squares" :key="yIndex">
-			<div v-for="(x, xIndex) in y" :key="xIndex" @click="positionHere(xIndex, yIndex)" ref="center">
+			<div class="cell" v-for="(x, xIndex) in y" :key="xIndex" @click="positionHere(xIndex, yIndex)" ref="center">
 				<div class="center" :class="'cen-' + yIndex + '-' + xIndex" :ref="'cen-' + yIndex + '-' + xIndex"></div>
 			</div>
 		</div>
@@ -52,10 +51,6 @@ export default class Home extends Vue {
         this.sjokz.moveTowards(new Vector(x, y));
 	}
 
-	public getMe(): HTMLElement {
-		return <HTMLElement>this.$refs.me;
-    }
-    
     public search(): void {
         this.feodor.search();
     }
@@ -69,14 +64,22 @@ export default class Home extends Vue {
 	display: grid;
 	grid-template-columns: repeat(15, 1fr);
 	grid-auto-rows: 1fr;
+	grid-gap: 10px;
+	margin-bottom: 10px;
 	// border: 1px solid red;
-	div {
+	.cell {
 		align-items: center;
 		justify-content: center;
 		display: flex;
 		width: 100%;
 		height: 100%;
 		color: white;
+		border: 1px solid rgb(32, 139, 77);
+		border-collapse: collapse;
+		&:hover {
+			border: 2px solid rgb(120, 20, 167);
+			z-index: 2px;
+		}
 		.center {
 			display: hidden;
 			width: 0px;
@@ -96,20 +99,5 @@ export default class Home extends Vue {
 .grid > *:first-child {
 	grid-row: 1 / 1;
 	grid-column: 1 / 1;
-}
-
-/* Just to make the grid visible */
-
-.grid > * {
-	background: rgba(0, 0, 0, 0.1);
-	border: 1px white solid;
-}
-
-.me {
-	position: absolute;
-	width: 15px;
-	height: 15px;
-	background-color: green;
-	border: 1px solid red;
 }
 </style>
