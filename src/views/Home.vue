@@ -43,13 +43,13 @@ export default class Home extends Vue {
         });
         this.engine.placeEntity(this.sjokz, new Vector(5, 5));
 		this.engine.addEntity(this.sjokz);
-        this.engine.placeEntity(this.feodor, new Vector(3, 4));
+        this.engine.placeEntity(this.feodor, new Vector(1, 1));
         this.engine.addEntity(this.feodor);
         this.engine.run();
     }
 
 	public positionHere(x: number, y: number): void {
-        this.sjokz.pushAction(new MoveAction(this.sjokz, new Vector(x, y)));
+        this.sjokz.moveTowards(new Vector(x, y));
 	}
 
 	public getMe(): HTMLElement {

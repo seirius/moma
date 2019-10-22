@@ -1,16 +1,20 @@
 import { Engine } from '../Engine';
 import { Entity } from '../Entity';
+import { Cell } from '../map/Cell';
 import { Vector } from '../Vector';
 
 export class Action {
     public engine!: Engine;
+    public parent: Entity;
     public cb: () => void;
 
-    public constructor(cb: () => void) {
+    public constructor(parent: Entity, cb: () => void) {
+        this.parent = parent;
         this.cb = cb;
     }
 
     public resolve(): void {
+        this.parent.freeForAction = true;
         if (this.cb) {
             this.cb();
         }
@@ -19,27 +23,25 @@ export class Action {
 }
 
 export class EmptyAction extends Action {
-    public constructor() {
-        super(() => {});
+    public constructor(parent: Entity) {
+        super(parent, () => {});
     }
 }
 
 export class MoveAction extends Action {
 
     private targetMove: Vector;
-    private originEntity: Entity;
 
-    public constructor(originEntity: Entity, targetMove: Vector) {
-        super(() => {
+    public constructor(parent: Entity, targetMove: Vector) {
+        super(parent, () => {
             if (this.targetMove) {
-                const next = MoveAction.getNextSquare(this.originEntity.position, this.targetMove);
-                const nextCell = this.engine.getCell(next.x, next.y);
-                if (nextCell && nextCell.canWalkThrough()) {
-                    this.engine.placeEntity(this.originEntity, next);
+                const next = MoveAction.getNextSquare(this.parent.position, this.targetMove);
+                const nextCell: Cell | undefined = this.engine.getCell(next.x, next.y);
+                if (nextCell instanceof Cell && nextCell.canWalkThrough()) {
+                    this.engine.placeEntity(this.parent, next);
                 }
             }
         });
-        this.originEntity = originEntity;
         this.targetMove = targetMove;
     }
 

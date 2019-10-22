@@ -1,5 +1,5 @@
 import { v4 } from 'uuid';
-import { Action } from './action/Action';
+import { Action, EmptyAction } from './action/Action';
 import { Engine } from './Engine';
 import { Vector } from './Vector';
 
@@ -10,6 +10,7 @@ export abstract class Entity {
     public worldPosition: Vector = new Vector();
     public engine!: Engine;
     public sides: EntitySide[] = [EntitySide.ALLY];
+    public freeForAction: boolean = true;
 
     constructor(position = new Vector()) {
         this.name = 'Mario';
@@ -25,8 +26,20 @@ export abstract class Entity {
 
     public onWorldAdd(): void {}
 
-    public pushAction(action: Action): void {
-        this.engine.pushAction(action);
+    public nextAction(): Action | undefined {
+        return new EmptyAction(this);
+    }
+
+    public setAsBusy(): void {
+        this.freeForAction = false;
+    }
+
+    public isBusy(): boolean {
+        return !this.freeForAction;
+    }
+
+    public setFree(): void {
+        this.freeForAction = true;
     }
 }
 

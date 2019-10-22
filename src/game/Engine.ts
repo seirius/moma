@@ -49,11 +49,21 @@ export class Engine {
             if (this.actionTimer >= this.actionTick) {
                 this.actionQueue.forEach((action) => {
                     action.engine = this;
+                    action.parent.setFree();
                     action.resolve();
                 });
                 this.actionStartTimer = undefined;
                 this.actionTimer = 0;
                 this.actionQueue.length = 0;
+                this.entities.forEach((entity: Entity) => {
+                    if (!entity.isBusy()) {
+                        const action = entity.nextAction();
+                        if (action !== undefined) {
+                            this.actionQueue.push(action);
+                            entity.setAsBusy();
+                        }
+                    }
+                });
             }
 			this.run();
 		}, 50);
@@ -85,13 +95,14 @@ export class Engine {
         }
     }
 
-    public findCloseEntity(position: Vector, range: number): Entity[] {
+    public findCloseEntity(entity: Entity, range: number): Entity[] {
         const entities: Entity[] = [];
+        const {position} = entity;
         for (let y = position.y - range; y < position.y + range; y++) {
             for (let x = position.x - range; x < position.x + range; x++) {
                 const cell = this.getCell(x, y);
                 if (cell && cell.entities.length) {
-                    entities.push(...cell.entities);
+                    entities.push(...cell.entities.filter((auxEntity) => auxEntity !== entity));
                 }
             }
         }
